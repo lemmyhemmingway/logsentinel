@@ -12,7 +12,7 @@
 ### 1. Installation
 Ensure you have `uv` installed.
 ```bash
-git clone 
+git clone
 cd LogSentinel
 uv sync
 

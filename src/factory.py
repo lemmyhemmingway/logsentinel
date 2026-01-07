@@ -5,6 +5,7 @@ from src.parsers.nginx import NginxParser
 
 class ParserFactory:
     """Get parser"""
+
     _parsers = {
         "nginx": NginxParser,
         # will add another parsers here ( ex: syslog )

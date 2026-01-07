@@ -14,5 +14,21 @@ dependencies = [
 [dependency-groups]
 dev = [
     "httpx>=0.28.1",
+    "pre-commit>=4.5.1",
     "pytest>=9.0.2",
+    "ruff>=0.14.10",
 ]
+
+[tool.ruff]
+# Standard PEP8 line length
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+# E: Error, F: Pyflakes, I: Isort (Imports), N: Naming, UP: Upgrade (Modern Syntax)
+select = ["E", "F", "I", "N", "UP"]
+ignore = []
+
+[tool.ruff.lint.isort]
+# Recognize 'src' as a local package for better import sorting
+known-first-party = ["src"]

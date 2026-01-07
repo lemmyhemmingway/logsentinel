@@ -1,25 +1,32 @@
-from typing import List
 from fastapi import APIRouter, status
 from fastapi.exceptions import HTTPException
+
+from src.api.schemas import BatchParseRequest, LogEntryResponse, ParseRequest
 from src.exceptions import ConfigurationError, ParserError
 from src.factory import ParserFactory
 
-from src.api.schemas import BatchParseRequest, LogEntryResponse, ParseRequest
-
-
 router = APIRouter()
 
-@router.get("/health", tags=["System"])
+
+@router.get(
+    "/health",
+    tags=["System"],
+)
 def health_check():
     """Returns system status"""
     return {"status": "active"}
 
-@router.post("/parse/{parser_type}", response_model=LogEntryResponse, tags=["Log Process"])
+
+@router.post(
+    "/parse/{parser_type}",
+    response_model=LogEntryResponse,
+    tags=["Log Process"],
+)
 def parse_log(parser_type: str, request: ParseRequest):
     """
-        Parses a single raw log line using the specified parser type.
+    Parses a single raw log line using the specified parser type.
 
-        - **parser_type**: nginx, apache, syslog, etc. (Must be defined in Factory)
+    - **parser_type**: nginx, apache, syslog, etc. (Must be defined in Factory)
     """
     try:
         parser = ParserFactory.get_parser(parser_type)
@@ -36,7 +43,7 @@ def parse_log(parser_type: str, request: ParseRequest):
     except ConfigurationError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid parser type: {str(e)}"
+            detail=f"Invalid parser type: {str(e)}",
         )
     except ParserError as e:
         raise HTTPException(
@@ -50,7 +57,11 @@ def parse_log(parser_type: str, request: ParseRequest):
         )
 
 
-@router.post("/parse/{parser_type}/batch", response_model=List[LogEntryResponse], tags=["Log Processing"])
+@router.post(
+    "/parse/{parser_type}/batch",
+    response_model=list[LogEntryResponse],
+    tags=["Log Processing"],
+)
 def parse_batch_logs(parser_type: str, request: BatchParseRequest):
     """
     Parses a list of raw log lines using the specified parser type.
@@ -60,7 +71,10 @@ def parse_batch_logs(parser_type: str, request: BatchParseRequest):
         # 1. Validate parser type once before the loop
         parser = ParserFactory.get_parser(parser_type)
     except ConfigurationError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid Parser Type: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid Parser Type: {e}",
+        )
 
     results = []
 

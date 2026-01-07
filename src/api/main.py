@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from src.config import ConfigLoader
+
 from src.api.routes import router
+from src.config import ConfigLoader
 
 # 1. Load Configuration
 try:
@@ -13,7 +14,7 @@ except Exception:
 app = FastAPI(
     title=app_name,
     description="A modular log ingestion and analysis API.",
-    version="0.1.0"
+    version="0.1.0",
 )
 
 # 3. Include Routes

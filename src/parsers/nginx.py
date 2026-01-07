@@ -1,9 +1,8 @@
+import re
 from datetime import datetime
-from typing import Optional
+
 from src.exceptions import ParserError
 from src.interfaces import LogParser
-import re
-
 from src.models import LogEntry
 
 
@@ -15,7 +14,7 @@ class NginxParser(LogParser):
     DATE_FORMAT = "%d/%b/%Y:%H:%M:%S %z"
     SERVICE_NAME = "nginx-access"
 
-    def parse(self, line: str) -> Optional[LogEntry]:
+    def parse(self, line: str) -> LogEntry | None:
         try:
             match = self.LOG_PATTERN.match(line)
             if not match:

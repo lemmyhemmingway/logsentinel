@@ -4,5 +4,5 @@ app:
   debug: true
 
 parser:
-  active_type: "nginx"  
-  log_source: "simulation" 
+  active_type: "nginx"
+  log_source: "simulation"

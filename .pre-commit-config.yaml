@@ -1,0 +1,15 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.10
+    hooks:
+      - id: ruff
+        args: [ --fix ] # Automatically fix linting errors where possible
+      - id: ruff-format # Standardize code formatting
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace    # Remove whitespace at the end of lines
+      - id: end-of-file-fixer       # Ensure files end with a newline
+      - id: check-yaml              # Validate YAML file syntax
+      - id: check-added-large-files  # Prevent committing large binary files
