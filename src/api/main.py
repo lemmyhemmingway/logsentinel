@@ -1,22 +1,22 @@
+# src/api/main.py
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
 from src.api.routes import router
-from src.config import ConfigLoader
 
-# 1. Load Configuration
-try:
-    config = ConfigLoader.load_config()
-    app_name = config.get("app", {}).get("name", "LogSentinel")
-except Exception:
-    app_name = "LogSentinel"
 
-# 2. Initialize App
-app = FastAPI(
-    title=app_name,
-    description="A modular log ingestion and analysis API.",
-    version="0.1.0",
-)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # --- STARTUP ---
+    print("API Starting up... Loading resources.")
 
-# 3. Include Routes
-# This automatically registers /parse/{parser_type} endpoints
+    yield
+
+    # --- SHUTDOWN ---
+    print("API Shutting down... Closing resources.")
+
+
+app = FastAPI(title="LogSentinel", lifespan=lifespan)
+
 app.include_router(router)
