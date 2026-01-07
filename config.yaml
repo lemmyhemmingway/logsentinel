@@ -1,0 +1,8 @@
+app:
+  name: "LogSentinel"
+  version: "0.1.0"
+  debug: true
+
+parser:
+  active_type: "nginx"  
+  log_source: "simulation" 
