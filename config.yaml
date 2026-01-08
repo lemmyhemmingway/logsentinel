@@ -6,3 +6,13 @@ app:
 parser:
   active_type: "nginx"
   log_source: "simulation"
+
+agents:
+  - name: "nginx-file-monitor"
+    type: "file"
+    enabled: true
+    parser_type: "nginx"
+    file_path: "access.log"
+    poll_interval: 2.0
+    read_from_end: true
+    api_url: "http://localhost:8000"
