@@ -4,8 +4,10 @@ from fastapi.exceptions import HTTPException
 from src.api.schemas import BatchParseRequest, LogEntryResponse, ParseRequest
 from src.exceptions import ConfigurationError, ParserError
 from src.factory import ParserFactory
+from src.storage import LogStorage
 
 router = APIRouter()
+storage = LogStorage()
 
 
 @router.get(
@@ -15,6 +17,18 @@ router = APIRouter()
 def health_check():
     """Returns system status"""
     return {"status": "active"}
+
+
+@router.get("/logs", response_model=list[LogEntryResponse], tags=["Analytics"])
+def get_logs(limit: int = 50, offset: int = 0, service: str | None = None):
+    """Retrieves the latest parsed logs from storage."""
+    return storage.get_logs(limit=limit, offset=offset, service_name=service)
+
+
+@router.get("/stats", tags=["Analytics"])
+def get_stats():
+    """Returns log ingestion statistics."""
+    return storage.get_stats()
 
 
 @router.post(
@@ -38,6 +52,10 @@ def parse_log(parser_type: str, request: ParseRequest):
                 status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
                 detail="log line cannot be parsed",
             )
+
+        # Save to storage
+        storage.save_log(result)
+
         return result
 
     except ConfigurationError as e:
@@ -87,5 +105,9 @@ def parse_batch_logs(parser_type: str, request: BatchParseRequest):
         except Exception:
             # Skip malformed lines in batch mode
             continue
+
+    # 3. Save batch to storage
+    if results:
+        storage.save_batch(results)
 
     return results
